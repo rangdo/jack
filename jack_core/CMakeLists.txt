@@ -1,7 +1,7 @@
 ################################################################################
 # jack_core
 ################################################################################
-cmake_minimum_required(VERSION 3.24.2)
+cmake_minimum_required(VERSION 3.22.1)
 
 option(BUILD_SHARED_LIBS "Prefer build shared libraries (DLLs)." ON)
 
