@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.22)
 project(uWebSockets)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)

@@ -42,7 +42,10 @@ set(WEBSOCKET_ADAPTER_PUBLIC_HEADERS
 
 target_sources(jack-websocket-adapter PRIVATE
     jack/websocket-adapter/websocketadapter.cpp
-    PUBLIC FILE_SET HEADERS BASE_DIRS . FILES ${WEBSOCKET_ADAPTER_PUBLIC_HEADERS}
+)
+target_include_directories(jack-websocket-adapter PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>
 )
 
 target_include_directories(jack-websocket-adapter PUBLIC
@@ -58,7 +61,6 @@ target_link_libraries(jack-websocket-adapter
     PRIVATE
         # jack-msgs
         # flatbuffers
-        uv_a
         uWebSockets::uWebSockets
         fmt::fmt-header-only
     PUBLIC
@@ -69,10 +71,13 @@ target_link_libraries(jack-websocket-adapter
 install(TARGETS jack-websocket-adapter # jack-msgs
     EXPORT ${PROJECT_NAME}_Targets
     COMPONENT jack_core_RunTime
-    FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jack/websocket-adapter
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jack
+    COMPONENT jack_core_Development
+    FILES_MATCHING PATTERN "*.h"
+)
 add_library(jack_core::jack-websocket-adapter ALIAS jack-websocket-adapter)
-

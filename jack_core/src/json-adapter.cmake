@@ -3,8 +3,10 @@ add_library(jack-json-adapter STATIC) #SHARED)
 
 target_sources(jack-json-adapter PRIVATE
     jack/json-adapter/jsonadapter.cpp
-    PUBLIC FILE_SET HEADERS BASE_DIRS . FILES
-        jack/json-adapter/jsonadapter.h
+)
+target_include_directories(jack-json-adapter PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>
 )
 
 target_include_directories(jack-json-adapter PUBLIC
@@ -17,18 +19,25 @@ target_compile_definitions(jack-json-adapter PUBLIC
 
 target_link_libraries(jack-json-adapter
     PUBLIC
+        nlohmann_json::nlohmann_json
         jack-event-protocol
     PRIVATE
         fmt::fmt-header-only
+)
+target_include_directories(jack-json-adapter PUBLIC
+    $<BUILD_INTERFACE:${nlohmann_json_SOURCE_DIR}/include>
 )
 
 install(TARGETS jack-json-adapter
     EXPORT ${PROJECT_NAME}_Targets
     COMPONENT jack_core_RunTime
-    FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jack/json-adapter
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jack
+    COMPONENT jack_core_Development
+    FILES_MATCHING PATTERN "*.h"
+)
 add_library(jack_core::jack-json-adapter ALIAS jack-json-adapter)
-

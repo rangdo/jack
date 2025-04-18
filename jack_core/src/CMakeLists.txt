@@ -119,7 +119,15 @@ add_library(jack_core STATIC)
 
 target_sources(jack_core PRIVATE
     ${JACK_SOURCES}
-    PUBLIC FILE_SET HEADERS BASE_DIRS . FILES ${JACK_HEADERS}
+)
+target_include_directories(jack_core PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jack
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    COMPONENT jack_core_Development
+    FILES_MATCHING PATTERN "*.h"
 )
 
 if(JACK_WITH_TESTS)
@@ -138,12 +146,16 @@ target_include_directories(jack_core PUBLIC
 
 include(GNUInstallDirs)
 install(TARGETS jack_core
-    EXPORT ${PROJECT_NAME}_Targets
+    EXPORT jack_coreTargets
     COMPONENT jack_core_RunTime
-    FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jack
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    COMPONENT jack_core_Development
+    FILES_MATCHING PATTERN "*.h"
 )
 add_library(jack_core::jack_core ALIAS jack_core)
 
@@ -173,7 +185,15 @@ set(JACK_EVENT_PROTOCOL_HEADERS
 target_sources(jack-event-protocol PRIVATE
     jack/event-protocol/protocol.cpp
     jack/event-protocol/protocolhelpers.cpp
-    PUBLIC FILE_SET HEADERS BASE_DIRS . FILES ${JACK_EVENT_PROTOCOL_HEADERS}
+)
+target_include_directories(jack-event-protocol PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jack/event-protocol
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jack
+    COMPONENT jack_core_Development
+    FILES_MATCHING PATTERN "*.h"
 )
 
 target_include_directories(jack-event-protocol PUBLIC
@@ -184,17 +204,25 @@ target_include_directories(jack-event-protocol PUBLIC
 target_link_libraries(jack-event-protocol PUBLIC
     concurrentqueue
     TracyClient
+    nlohmann_json::nlohmann_json
     PRIVATE
         fmt::fmt-header-only
+)
+target_include_directories(jack-event-protocol PUBLIC
+    $<BUILD_INTERFACE:${nlohmann_json_SOURCE_DIR}/include>
 )
 
 install(TARGETS jack-event-protocol
     EXPORT ${PROJECT_NAME}_Targets
     COMPONENT jack_core_RunTime
-    FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jack/event-protocol
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jack
+    COMPONENT jack_core_Development
+    FILES_MATCHING PATTERN "*.h"
 )
 add_library(jack_core::jack-event-protocol ALIAS jack-event-protocol)
 
@@ -210,11 +238,29 @@ endif()
 if (JACK_WITH_JSON_ADAPTER)
     include(json-adapter.cmake)
     target_link_libraries(jack_core PUBLIC jack-json-adapter)
+    target_include_directories(jack-json-adapter PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+    )
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jack/json-adapter
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jack
+        COMPONENT jack_core_Development
+        FILES_MATCHING PATTERN "*.h"
+    )
 endif()
 
 if (JACK_WITH_WEBSOCKETS)
     include(websocket-adapter.cmake)
     target_link_libraries(jack_core PUBLIC jack-websocket-adapter)
+    target_include_directories(jack-websocket-adapter PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:include>
+    )
+    install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/jack/websocket-adapter
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jack
+        COMPONENT jack_core_Development
+        FILES_MATCHING PATTERN "*.h"
+    )
 endif()
 
 if (JACK_WITH_TESTS)
@@ -271,4 +317,3 @@ if (JACK_WITH_STACKTRACE)
     target_compile_definitions(jack_core PUBLIC JACK_WITH_STACKTRACE)
     target_link_libraries(jack_core PUBLIC cpptrace)
 endif()
-

@@ -35,22 +35,32 @@ if(CCACHE_PROGRAM)
 endif()
 
 # find dependencies
-find_package(ament_cmake REQUIRED)
-find_package(jack_make REQUIRED)
+# Find jack-make using our custom module
+include(../cmake/FindJackMake.cmake)
+find_jack_make()
 
-if(BUILD_TESTING)
-  find_package(ament_lint_auto REQUIRED)
-  # the following line skips the linter which checks for copyrights
-  # comment the line when a copyright and license is added to all source files
-  set(ament_cmake_copyright_FOUND TRUE)
-  # the following line skips cpplint (only works in a git repo)
-  # comment the line when this package is in a git repo and when
-  # a copyright and license is added to all source files
-  set(ament_cmake_cpplint_FOUND TRUE)
-  ament_lint_auto_find_test_dependencies()
+if(USE_AMENT)
+  find_package(ament_cmake REQUIRED)
+  
+  if(BUILD_TESTING)
+    find_package(ament_lint_auto REQUIRED)
+    # the following line skips the linter which checks for copyrights
+    # comment the line when a copyright and license is added to all source files
+    set(ament_cmake_copyright_FOUND TRUE)
+    # the following line skips cpplint (only works in a git repo)
+    # comment the line when this package is in a git repo and when
+    # a copyright and license is added to all source files
+    set(ament_cmake_cpplint_FOUND TRUE)
+    ament_lint_auto_find_test_dependencies()
+  endif()
+
+  ament_package()
+else()
+  if(BUILD_TESTING)
+    enable_testing()
+    # Add standard CMake testing setup here
+  endif()
 endif()
-
-ament_package()
 
 include(GNUInstallDirs)
 file(RELATIVE_PATH relDir
@@ -74,8 +84,6 @@ endif()
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads)
-
-find_package(jack_make REQUIRED)
 
 ################################################################################
 # Options
