@@ -77,10 +77,6 @@ Some useful options for building JACK are listed below.
 
     Enable CycloneDDS (bus distribution) support in the engine
 
-- `JACK_WITH_GCC_CXX03_ABI (default OFF)`
-
-    Build jack_core using the CXX03 ABI flag (necessary for RTI version <=5.3.1)
-
 - `JACK_WITH_RTI_DDS (default OFF)`
 
     Enable DDS (bus distribution) support in the engine.
@@ -94,12 +90,6 @@ Some useful options for building JACK are listed below.
 - `JACK_WITH_WEBSOCKETS (default ON)`
 
     Enable websocket server in the engine.
-
-- `JACK_WITH_GCC_CXX03_ABI (default OFF)`
-
-    (Linux only) Build with the compile flag `-D_GLIBCXX_USE_CXX11_ABI=0`,
-    which compiles the project with C++'s CXX03 ABI.
-    Required to be compatible with rti_connext_dds v5.3.1.
 
 - `JACK_RUST_VERSION`
 
@@ -268,11 +258,6 @@ When the RTI-DDS test has been run, it should look like:
 RTI_LICENSE_FILE=<path/to/rti_license.dat> <path/to/build/tests/busadapters> --gtest_filter=BusAdapters.*DDS
 i.e.  RTI_LICENSE_FILE=/home/doyle/rti_license.dat /home/doyle/jack_core/build/tests/busadapters --gtest_filter=BusAdapters.*DDS
 ```
-
-NOTE: RTI DDS Version 5.3.1 for Linux has been compiled with GCC 4.8.2. This
-comes with a CXX03 ABI that requires the `-DJACK_WITH_GCC_CXX03_ABI` to be set
-on the CMake build command, for the jack_core to compile and execute
-successfully.
 
 #### Bus Testing
 

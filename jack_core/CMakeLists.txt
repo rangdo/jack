@@ -76,12 +76,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
         CACHE PATH "default local install directory" FORCE)
 endif()
 
-if (MSVC)
-    # Disable MSVC wanting *_s "secure" versions of CRT API (i.e. buffer length
-    # checks) making cross-platform usage of CRT messy.
-    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
-endif()
-
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads)
 
@@ -101,7 +95,6 @@ option(JACK_SHARED_MEMORY_DEBUGGING "(Linux only) Enable JACK dumping engine dat
 option(JACK_SLOW_DEBUG_CHECKS "Enable slow verification checks of the engine state throughout the code base. Use this to vet the engine in applications" ${JACK_IS_DEBUG_BUILD})
 option(JACK_WITH_ASAN "Enable address sanitizer, this must be used with debug build" OFF)
 option(JACK_WITH_CYCLONE_DDS "Enable CycloneDDS (bus distribution) support in the engine" OFF)
-set   (JACK_WITH_GCC_CXX03_ABI OFF CACHE BOOL "Build jack_core using the CXX03 ABI flag")
 option(JACK_WITH_RTI_DDS "Enable DDS (bus distribution) support in the engine" OFF)
 option(JACK_WITH_TESTS "Build with unit/integration test suites" OFF)
 set   (JACK_RUST_VERSION "" CACHE STRING "Rust version to use to build jack-make")
@@ -109,26 +102,11 @@ option(JACK_WITH_WEBSOCKETS "Enable websocket server in the engine" ON)
 option(JACK_WITH_JSON_ADAPTER "Enable JSON (bus distribution) support in the engine" ON)
 option(CTEST_OUTPUT_ON_FAILURE "ctest output on failure" 1)
 
-if (UNIX)
-    if (JACK_WITH_GCC_CXX03_ABI OR JACK_WITH_RTI_DDS)
-        # \note Poison the build with the CXX03 ABI because everything must be
-        # built with this flag for correct interop between JACK and any other
-        # dependency.
-        #
-        # Additionally this will set the CMake target of the core to
-        # transitively apply this flag to projects that link JACK to ensure
-        # compatibility.
-        add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-    endif()
-endif()
-
 if (JACK_WITH_ASAN)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
-    if (NOT MSVC)
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize-address-use-after-scope -fno-omit-frame-pointer")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize-address-use-after-scope -fno-omit-frame-pointer")
-    endif()
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize-address-use-after-scope -fno-omit-frame-pointer")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize-address-use-after-scope -fno-omit-frame-pointer")
 endif()
 
 ################################################################################

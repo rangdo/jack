@@ -167,9 +167,8 @@ target_link_libraries(jack_core
         fmt::fmt-header-only
 )
 
-if (NOT MSVC)
-    target_link_libraries(jack_core PRIVATE Threads::Threads)
-endif()
+target_link_libraries(jack_core PRIVATE Threads::Threads)
+
 
 ################################################################################
 # Other Libraries
@@ -273,15 +272,8 @@ endif()
 option(JACK_SHARED_MEMORY_DEBUGGING "Enable JACK dumping engine data to shared memory" OFF)
 option(JACK_ALLOCATION_TRACKING "Enable call-site tracking of allocations" OFF)
 
-if(MSVC)
-    set(JACK_SHARED_MEMORY_DEBUGGING OFF) # TODO(aos): Shared memory is not supported in MSVC yet.
-    target_compile_options(jack_core PRIVATE /W4 /WX)
-    target_compile_definitions(jack_core PRIVATE YY_NO_UNISTD_H=1)
-    set_source_files_properties(jack/lex.yy.c PROPERTIES COMPILE_FLAGS /w) # switch off all warning for the lex file
-else()
-    target_compile_options(jack_core PRIVATE -Wall -Wextra -pedantic -Werror)
-    set_source_files_properties(jack/lex.yy.c PROPERTIES COMPILE_FLAGS -Wno-all) # switch off all warning for the lex file
-endif()
+target_compile_options(jack_core PRIVATE -Wall -Wextra -pedantic -Werror)
+set_source_files_properties(jack/lex.yy.c PROPERTIES COMPILE_FLAGS -Wno-all) # switch off all warning for the lex file
 
 if (JACK_SHARED_MEMORY_DEBUGGING)
     target_compile_definitions(jack_core PRIVATE -D JACK_SHARED_MEMORY_DEBUGGING)
@@ -289,10 +281,6 @@ endif()
 
 if (JACK_SLOW_DEBUG_CHECKS)
     target_compile_definitions(jack_core PRIVATE -D JACK_SLOW_DEBUG_CHECK_BUILD_FLAG)
-endif()
-
-if (JACK_WITH_GCC_CXX03_ABI)
-    target_compile_definitions(jack_core INTERFACE -D _GLIBCXX_USE_CXX11_ABI=0)
 endif()
 
 if (JACK_ALLOCATION_TRACKING)
