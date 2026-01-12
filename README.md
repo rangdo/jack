@@ -31,4 +31,4 @@ source install/setup.bash
 ## JOIN THE JACK COMMUNITY
 
 Discuss on discord:
-https://discord.gg/MjEWW7yp
+https://discord.gg/9vPAEWWf
