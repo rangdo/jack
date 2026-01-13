@@ -1,7 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
-
-find_package(ament_cmake REQUIRED)
-find_package(jack_make REQUIRED)
+cmake_minimum_required(VERSION 3.22)
 
 if (EXISTS ${JACK_MAKE_EXE})
     set(MODEL_FILE ${CMAKE_CURRENT_SOURCE_DIR}/tests.mod.jack.json)
