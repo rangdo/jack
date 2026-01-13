@@ -96,7 +96,7 @@ option(JACK_SLOW_DEBUG_CHECKS "Enable slow verification checks of the engine sta
 option(JACK_WITH_ASAN "Enable address sanitizer, this must be used with debug build" OFF)
 option(JACK_WITH_CYCLONE_DDS "Enable CycloneDDS (bus distribution) support in the engine" OFF)
 option(JACK_WITH_RTI_DDS "Enable DDS (bus distribution) support in the engine" OFF)
-option(JACK_WITH_TESTS "Build with unit/integration test suites" OFF)
+option(JACK_WITH_TESTS "Build with unit/integration test suites" ON)
 set   (JACK_RUST_VERSION "" CACHE STRING "Rust version to use to build jack-make")
 option(JACK_WITH_WEBSOCKETS "Enable websocket server in the engine" ON)
 option(JACK_WITH_JSON_ADAPTER "Enable JSON (bus distribution) support in the engine" ON)
