@@ -18,7 +18,7 @@ application.
 ### Build using colcon (ROS 2)
 
 ```bash
-colcon build --cmake-args -DCMAKE_BUILD_TYPE:STRING=Debug
+colcon build --cmake-args -DUSE_AMENT=ON -DCMAKE_BUILD_TYPE:STRING=Debug
 ```
 
 ### Build using CMake (Standalone)
@@ -43,7 +43,7 @@ cargo install --path jack_make
 
 #### Full project build
 ```bash
-cmake -B build -DUSE_AMENT=OFF
+cmake -B build
 cmake --build build
 ```
 
@@ -51,7 +51,7 @@ cmake --build build
 If jack-make is installed in a custom location:
 ```bash
 export JACK_MAKE_PATH=/path/to/jack-make
-cmake -B build -DUSE_AMENT=OFF
+cmake -B build
 etc.
 ```
 
