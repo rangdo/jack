@@ -1,12 +1,17 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.22.1)
 project(gol)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-find_package(jack_make REQUIRED)
-find_package(jack_core REQUIRED)
+# Find jack-make using our custom module
+include(../../cmake/FindJackMake.cmake)
+find_jack_make()
+
+if(NOT TARGET jack_core)
+    message(FATAL_ERROR "jack_core target not found - build jack_core first")
+endif()
 
 # SFML fetch based on https://github.com/SFML/cmake-sfml-project
 

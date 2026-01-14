@@ -21,6 +21,12 @@ add_subdirectory(deps/concurrentqueue)
 add_subdirectory(deps/fmt)
 add_subdirectory(deps/date)
 add_subdirectory(deps/nlohmann)
+install(TARGETS nlohmann_json
+    EXPORT ${PROJECT_NAME}_Targets
+    COMPONENT jack_core_RunTime
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
 
 
 if (JACK_WITH_STACKTRACE)
